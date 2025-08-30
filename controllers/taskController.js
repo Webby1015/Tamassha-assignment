@@ -1,5 +1,6 @@
 import Task from "../models/taskModel.js";
 
+
 export const getTasks = async (req, res, next) => {
   try {
     let { status, page, limit } = req.query;
@@ -78,7 +79,13 @@ export const createTask = async (req, res, next) => {
 
 
 export const updateTask = async (req, res, next) => {
+
   try {
+
+    if (req.body == undefined) {
+      return res.status(400).json({ error: "Request body is required" });
+    }
+
     const { title, description, status } = req.body;
 
     if (title !== undefined && title.trim() === "") {
@@ -92,7 +99,7 @@ export const updateTask = async (req, res, next) => {
     if (status && !["pending", "in-progress", "completed"].includes(status)) {
       return res.status(400).json({ error: "Invalid status value" });
     }
-
+    
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       { title, description, status },
@@ -103,20 +110,30 @@ export const updateTask = async (req, res, next) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    res.status(200).json(updatedTask);
+    const response = {
+      message: "Task Updated successfully",
+      data: updatedTask,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
 };
 
-// DELETE a task
+
 export const deleteTask = async (req, res, next) => {
   try {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
     if (!deletedTask) {
       return res.status(404).json({ error: "Task not found" });
     }
-    res.status(200).json({ message: "Task deleted successfully" });
+        const response = {
+      message: "Task deleted successfully",
+      data: deletedTask,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
