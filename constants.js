@@ -6,4 +6,10 @@ const constants = {
   SERVER_ERROR: 500,
 };
 
+export const TASK_STATUS = {
+  PENDING: "pending",
+  IN_PROGRESS: "in-progress",
+  COMPLETED: "completed",
+};
+
 export default constants;

@@ -1,41 +1,62 @@
 import Task from "../models/taskModel.js";
 
-// GET all tasks (with optional filters and pagination)
 export const getTasks = async (req, res, next) => {
   try {
-    const { status, page = 1, limit = 10 } = req.query;
+    let { status, page, limit } = req.query;
     const query = status ? { status } : {};
 
-    const tasks = await Task.find(query)
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+    let tasks;
 
-    res.status(200).json(tasks);
+    if (!status && !page && !limit) {
+      tasks = await Task.find(query).sort({ createdAt: -1 });
+    } else {
+      page = parseInt(page) || 1;
+      limit = parseInt(limit) || 10;
+      const skip = (page - 1) * limit;
+      tasks = await Task.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+    }
+
+    const response = {
+      message: "Data retrieved successfully",
+      size: tasks.length,
+      data: tasks,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
 };
 
-// GET a single task by ID
+
 export const getTask = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
-    res.status(200).json(task);
+
+    const response = {
+      message: "Data retrieved successfully",
+      data: task,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
 };
 
-// CREATE a new task
+
 export const createTask = async (req, res, next) => {
   try {
     const { title, description, status } = req.body;
 
-    if (!title || !description) {
-      return res.status(400).json({ error: "Title and description are required" });
+    if (!title || !description || !status) {
+      return res.status(400).json({ error: "Title, description and status are required" });
     }
 
     if (status && !["pending", "in-progress", "completed"].includes(status)) {
@@ -43,13 +64,19 @@ export const createTask = async (req, res, next) => {
     }
 
     const newTask = await Task.create({ title, description, status });
-    res.status(201).json(newTask);
+
+    const response = {
+      message: "Task Created successfully",
+      data: newTask,
+    };
+
+    res.status(201).json(response);
   } catch (error) {
     next(error);
   }
 };
 
-// UPDATE a task
+
 export const updateTask = async (req, res, next) => {
   try {
     const { title, description, status } = req.body;

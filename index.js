@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use(errorHandler);
-app.unsubscribe("/tasks",taskRoutes)
+app.use("/api/tasks",taskRoutes)
 
 app.get("/", (req, res) => {
   res.status(200).json({

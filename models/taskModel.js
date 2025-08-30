@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { TASK_STATUS } from "../constants.js";
 
 const taskSchema = new mongoose.Schema(
   {
@@ -14,8 +15,8 @@ const taskSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "in-progress", "completed"],
-      default: "pending",
+      enum: Object.values(TASK_STATUS),
+      default: TASK_STATUS.PENDING,
     },
     createdAt: {
       type: Date,
@@ -25,5 +26,5 @@ const taskSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-const Task = mongoose.model("Task", taskSchema);
+const Task = mongoose.model("Task", taskSchema, "tasks-collection");
 export default Task;
