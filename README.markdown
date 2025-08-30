@@ -114,18 +114,3 @@ Example workflow:
 2. Retrieve all tasks with `GET /api/tasks` or filter by status (`?status=pending`).
 3. Update a task with `PUT /api/tasks/:id` or delete it with `DELETE /api/tasks/:id`.
 
-## Contributing
-Contributions are welcome! To contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -m "Add your feature"`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a Pull Request.
-
-Please ensure your code follows the project's style guidelines and includes appropriate tests.
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact
-For questions or feedback, reach out to [your email or GitHub profile].
